@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 const ApplyJob = ({ jobId }) => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);

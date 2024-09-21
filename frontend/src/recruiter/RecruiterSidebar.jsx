@@ -13,9 +13,9 @@ const RecruiterSidebar = () => {
     // { path: '/applied', icon: '📝', label: 'Applied' },
     { path: "/mycreatedjobs", icon: "💬", label: "Messages" },
     { path: "/create", icon: "🔍", label: "Discover" },
-    { path: "/login", icon: "⏭", label: "Logout", onClick:handleLogout },
+    { path: "/filtered", icon: "🔍", label: "filter with AI" },
   ];
-  
+
   async function handleLogout() {
     localStorage.removeItem("jwtToken");
     navigate("/login");

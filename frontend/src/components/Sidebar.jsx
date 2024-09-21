@@ -18,6 +18,7 @@ const Sidebar = () => {
           { path: "/profile", icon: "👤", label: "Profile" },
           { path: "/review", icon: "💼", label: "Review" },
           { path: "/applied", icon: "📝", label: "Applied" },
+          { path: "/JobSearch", icon: "📝", label: "Job Search" }
         ];
 
   return (

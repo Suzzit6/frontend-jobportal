@@ -5,10 +5,13 @@ const ApplicantSidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', icon: '🏠', label: 'Home' },
-    { path: '/profile', icon: '👤', label: 'Profile' },
+    { path: '/job', icon: '🏠', label: 'Job Search' },
+    { path: '/', icon: '👤', label: 'Home' },
     { path: '/review', icon: '💼', label: 'Review' },
     { path: '/applied', icon: '📝', label: 'Applied' },
+    { path: '/filter', icon: '📝', label: 'filter jobs' },
+    
+    
     // { path: '/messages', icon: '💬', label: 'Messages' },
     // { path: '/discover', icon: '🔍', label: 'Discover' },
   ];

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import MessageDialog from "./MessageDialog"; // Import the dialog component
 
 const MyCreatedJobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null); // To track selected job
-  const [applicants, setApplicants] = useState([]); // To store applicants for the selected job
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -30,7 +31,7 @@ const MyCreatedJobs = () => {
             },
           }
         );
-        setJobs(response.data); // Set the jobs data in state
+        setJobs(response.data);
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch created jobs.");
@@ -43,11 +44,10 @@ const MyCreatedJobs = () => {
 
   // Fetch applicants for the selected job
   const fetchApplicants = async (jobId) => {
-    setLoading(true); // Show loading while fetching applicants
+    setLoading(true);
     const token = localStorage.getItem("jwtToken");
 
     try {
-      // Make a GET request with jobId in the URL as a route parameter
       const response = await axios.get(
         `http://localhost:3000/api/recruiter/applicants/${jobId}`,
         {
@@ -57,8 +57,8 @@ const MyCreatedJobs = () => {
         }
       );
 
-      setApplicants(response.data.applicants); // Store applicants data
-      setSelectedJob(response.data.job); // Store selected job data
+      setApplicants(response.data.applicants);
+      setSelectedJob(response.data.job);
       setLoading(false);
     } catch (error) {
       setError("Failed to fetch applicants for the selected job.");
@@ -89,6 +89,25 @@ const MyCreatedJobs = () => {
     }
   };
 
+  const handleSendMessage = async (applicantId, message) => {
+    const token = localStorage.getItem("jwtToken");
+
+    try {
+      await axios.post(
+        `http://localhost:3000/api/recruiter/message/${applicantId}`,
+        { message },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Message sent successfully!"); // Simple feedback for the user
+    } catch (error) {
+      alert("Failed to send message.");
+    }
+  };
+
   // Render loading state
   if (loading) return <div className="text-center py-4">Loading...</div>;
   if (error)
@@ -103,9 +122,13 @@ const MyCreatedJobs = () => {
             <li
               key={job.id}
               className="border p-4 rounded-md shadow cursor-pointer hover:bg-gray-100"
-              onClick={() => fetchApplicants(job.id)} // Fetch applicants on click
+              onClick={() => fetchApplicants(job.id)}
             >
               <h2 className="text-xl font-semibold">{job.title}</h2>
+
+              <p className="text-gray-600">id : {job.id}</p>
+              <p className="text-gray-600">{job.companyname}</p>
+
               <p className="text-gray-600">{job.companyname}</p>
               <p className="text-gray-600">{job.location}</p>
               <p className="text-gray-600">
@@ -169,6 +192,15 @@ const MyCreatedJobs = () => {
                   >
                     View Resume ({applicant.resumeOriginalName})
                   </a>
+                  <button
+                    className="ml-4 bg-blue-500 text-white p-2 rounded"
+                    onClick={() => {
+                      setCurrentApplicant(applicant);
+                      setIsDialogOpen(true);
+                    }}
+                  >
+                    Message
+                  </button>
                 </li>
               ))}
             </ul>
