@@ -10,6 +10,7 @@ const ApplicantSidebar = () => {
     { path: '/review', icon: '💼', label: 'Review' },
     { path: '/applied', icon: '📝', label: 'Applied' },
     { path: '/filter', icon: '📝', label: 'filter jobs' },
+    { path: '/login', icon: '📝', label: 'Logout', onClick: () => { localStorage.removeItem("jwtToken"); } },
     
     
     // { path: '/messages', icon: '💬', label: 'Messages' },

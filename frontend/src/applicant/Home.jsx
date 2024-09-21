@@ -7,6 +7,9 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
+  useEffect(() => {
+    console.log("job",jobs)
+  }, [jobs]);
 
   const fetchJobs = async (searchParams = {}) => {
     setLoading(true); // Reset loading state
@@ -29,6 +32,7 @@ const Home = () => {
           Authorization: `Bearer ${token}`, // Fixed template literal
         },
       });
+      console.log("response ",response)
       
       if (response.ok) {
         const data = await response.json();

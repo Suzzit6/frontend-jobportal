@@ -17,7 +17,7 @@ const JobSearch = () => {
       return;
     }
     try {
-      const response = await axios.get("http://localhost:3000/api/applicant/filter", {
+      const response = await axios.get(`http://localhost:3000/api/applicant/filter`, {
         params: { searchTerm },
         headers: { Authorization: `Bearer ${token}` }, // Fixed template literal
       });
@@ -49,6 +49,9 @@ const JobSearch = () => {
       setApplyingJobId(null);
     }
   };
+  useEffect(() => {
+    console.log("job",jobs)
+  }, [jobs]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
