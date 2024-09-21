@@ -109,6 +109,14 @@ const App = () => {
                 </AuthenticatedRoute>
               }
             />
+            {/* <Route
+              path="/filter"
+              element={
+                <AuthenticatedRoute>
+                  <FilterCandidates />
+                </AuthenticatedRoute>
+              }
+            /> */}
           </>
         )}
 

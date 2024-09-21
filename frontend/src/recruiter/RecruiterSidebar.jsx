@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 const RecruiterSidebar = () => {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const navItems = [
     { path: "/", icon: "🏠", label: "My Created Jobs" },
     { path: "/create", icon: "➕", label: "Create Job" },
@@ -13,7 +13,13 @@ const RecruiterSidebar = () => {
     // { path: '/applied', icon: '📝', label: 'Applied' },
     { path: "/mycreatedjobs", icon: "💬", label: "Messages" },
     { path: "/create", icon: "🔍", label: "Discover" },
+    { path: "/login", icon: "⏭", label: "Logout", onClick:handleLogout },
   ];
+  
+  async function handleLogout() {
+    localStorage.removeItem("jwtToken");
+    navigate("/login");
+  }
 
   return (
     <nav className="bg-gray-800 text-white w-64 min-h-screen p-4">
