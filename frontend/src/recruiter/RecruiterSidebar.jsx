@@ -13,6 +13,7 @@ const RecruiterSidebar = () => {
     // { path: '/applied', icon: '📝', label: 'Applied' },
     { path: "/mycreatedjobs", icon: "💬", label: "Messages" },
     { path: "/create", icon: "🔍", label: "Discover" },
+    { path: "/filtered", icon: "🔍", label: "filter with AI" },
   ];
 
   return (

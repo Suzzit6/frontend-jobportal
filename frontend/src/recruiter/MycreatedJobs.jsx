@@ -102,6 +102,10 @@ const MyCreatedJobs = () => {
               onClick={() => fetchApplicants(job.id)}
             >
               <h2 className="text-xl font-semibold">{job.title}</h2>
+
+              <p className="text-gray-600">id : {job.id}</p>
+              <p className="text-gray-600">{job.companyname}</p>
+
               <p className="text-gray-600">{job.companyname}</p>
               <p className="text-gray-600">{job.location}</p>
               <p className="text-gray-600">

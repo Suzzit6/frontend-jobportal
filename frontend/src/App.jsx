@@ -18,6 +18,7 @@ import RecruiterSidebar from "./recruiter/RecruiterSidebar"; // Ensure correct p
 import FilterJobs from "./applicant/FilterJobs";
 import { UserContext } from "./context/UserContext";
 import JobSearch from "./applicant/JobSearch";
+import FilteredAppli from "./recruiter/FilteredAppli";
 
 const AuthenticatedRoute = ({ children }) => {
   const { user } = useContext(UserContext);
@@ -127,6 +128,14 @@ const App = () => {
               element={
                 <AuthenticatedRoute>
                   <CreateJob />
+                </AuthenticatedRoute>
+              }
+            />
+            <Route
+              path="/filtered"
+              element={
+                <AuthenticatedRoute>
+                  <FilteredAppli/>
                 </AuthenticatedRoute>
               }
             />
