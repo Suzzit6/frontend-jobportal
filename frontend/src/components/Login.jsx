@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext"; // Import UserContext
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    type: 'Applicant',
+    email: "",
+    password: "",
+    type: "Applicant", // Default to Applicant
   });
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext); // Get setUser from context
 
   const handleChange = (e) => {
     setFormData({
@@ -19,27 +21,40 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('jwtToken', data.token);
-        alert('Login successful');
-        console.log('JWT Token:', data.token);
-        navigate('/home'); // Redirect to /home
+        localStorage.setItem("jwtToken", data.token);
+        alert("Login successful");
+        console.log("JWT Token:", data.token);
+
+        // Set user in context
+        setUser({
+          email: formData.email,
+          accountType: formData.type, // Assuming your backend provides this info
+          // Add any other user data you receive
+        });
+
+        // Redirect based on user role
+        if (formData.type === "Recruiter") {
+          navigate("/mycreatedjobs");
+        } else {
+          navigate("/");
+        }
       } else {
-        alert('Login failed');
+        alert("Login failed");
         console.error(data);
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again.');
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
@@ -52,7 +67,10 @@ const Login = () => {
         <h2 className="text-center text-2xl font-bold mb-4">Login</h2>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="email"
+          >
             Email
           </label>
           <input
@@ -67,7 +85,10 @@ const Login = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -82,7 +103,10 @@ const Login = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="type"
+          >
             Type
           </label>
           <select

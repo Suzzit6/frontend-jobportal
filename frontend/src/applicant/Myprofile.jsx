@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Myprofile = () => {
+const MyProfile = () => {
   const [profile, setProfile] = useState({
     name: '',
     email: '',
@@ -13,13 +14,25 @@ const Myprofile = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState(profile);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
+  console.log("token")
   useEffect(() => {
     // Fetch the profile information with JWT token in headers
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token'); // Get the token from localStorage
+      const token = localStorage.getItem('jwtToken'); // Get the token from localStorage
+      if (!token) {
+        setError('User is not authenticated. Please log in.');
+        navigate('/login');
+        return;
+      }
+
       try {
-        const response = await axios.get('http://localhost:3000/api/applicant/profileinfo', {
+        const response = await axios.get('http://localhost:3000/api/applicant/profileinfo', 
+        {
           headers: {
             Authorization: `Bearer ${token}`, // Add token to request headers
           },
@@ -28,6 +41,10 @@ const Myprofile = () => {
         setUpdatedProfile(response.data);
       } catch (error) {
         console.error('Error fetching profile info:', error);
+        setError('Failed to load profile information.');
+        if (error.response && error.response.status === 401) {
+          navigate('/login'); // Navigate to login if token is invalid
+        }
       }
     };
 
@@ -54,29 +71,41 @@ const Myprofile = () => {
 
   // Submit the updated profile with JWT token in headers
   const handleSubmit = async () => {
-    const token = localStorage.getItem('token'); // Get the token from localStorage
+    const token = localStorage.getItem('jwtToken'); // Get the token from localStorage
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
     try {
       await axios.post('http://localhost:3000/api/applicant/update', updatedProfile, {
         headers: {
-          Authorization: `Bearer ${token}`, // Add token to request headers
+          Authorization:`Bearer ${token}`, // Add token to request headers
         },
       });
       setProfile(updatedProfile); // Update the profile state after success
       setEditMode(false);
-    } catch (error) {
+      setSuccess('Profile updated successfully.');
+    } 
+    catch (error) {
       console.error('Error updating profile:', error);
+      setError('Failed to update profile. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Applicant Profile</h1>
+      {error && <p className="text-red-500">{error}</p>}
+      {success && <p className="text-green-500">{success}</p>}
+
       {!editMode ? (
         <div>
           <p><strong>Name:</strong> {profile.name}</p>
           <p><strong>Email:</strong> {profile.email}</p>
           <p><strong>Bio:</strong> {profile.bio}</p>
-          <p><strong>Skills:</strong> {profile.skills.join(', ')}</p>
+          <p><strong>Skills:</strong> {profile.skills.length > 0 ? profile.skills.join(', ') : 'No skills added'}</p>
           <p><strong>Resume:</strong> <a href={profile.resume} target="_blank" rel="noopener noreferrer">{profile.resumeOriginalName}</a></p>
           <img src={profile.profilePhoto} alt="Profile" className="mt-4 w-32 h-32 rounded-full" />
           <button
@@ -141,12 +170,14 @@ const Myprofile = () => {
           <button
             onClick={handleSubmit}
             className="bg-green-500 text-white px-4 py-2 rounded mr-4"
+            disabled={loading}
           >
-            Save Changes
+            {loading ? 'Saving...' : 'Save Changes'}
           </button>
           <button
             onClick={() => setEditMode(false)}
             className="bg-gray-500 text-white px-4 py-2 rounded"
+            disabled={loading}
           >
             Cancel
           </button>
@@ -156,4 +187,4 @@ const Myprofile = () => {
   );
 };
 
-export default Myprofile;
+export default MyProfile;
